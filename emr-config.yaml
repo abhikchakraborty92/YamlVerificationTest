@@ -1,0 +1,56 @@
+General:
+  Name: My EMR Cluster # Name of the cluster
+  LogUri: S3://location/sblocation/logs # S3 Location where all the logs of EMR will be saved and can be accessed post termination of the cluster
+  ReleaseLabel: Release label of emr to be used # Example: emr-5.33.0'
+  KeepJobFlowAliveWhenNoSteps: True # If this is True, the cluster will stay after completion of the steps. Else, it will terminate
+  TerminationProtected: False
+  VisibleToAllUsers: True
+
+
+# Add a new entry for every application to be installed in the EMR cluster. A default list of applications has been prepopulated
+Applications:
+  - Name: Hadoop
+  - Name: Hive
+  - Name: Pig
+  - Name: Hue
+  - Name: Spark
+  - Name: JupyterHub
+  - Name: JupyterEnterpriseGateway
+
+# This is a very important section. Here we define various nodes of the cluster: Master, Core, task, etc along with their configurations
+
+InstanceGroups:
+# Enter details about the master node here
+  - Name: Master Nodes  # Name of the group of nodes
+    Market: SPOT   # Type of pricing model to be applied while requesting this node
+    InstanceRole: MASTER  # Role of these nodes in the EMR cluster
+    InstanceType: 't2.nano' # Type of EC2 instance. Each instance has a different config and price
+    InstanceCount: 1 # Number of nodes of the above type
+
+# Enter details about the core/slave node here
+  - Name: Slave Nodes
+    Market: SPOT
+    InstanceRole: CORE
+    InstanceType: 't2.nano'
+    InstanceCount: 1
+
+# Enter details about task nodes here
+  - Name: Slave Nodes
+    Market: SPOT
+    InstanceRole: CORE
+    InstanceType: 't2.nano'
+    InstanceCount: 1
+
+Permissions:
+    Ec2KeyName: dpia-spark-key  # EC2 key value pair to be used for authentication
+    Ec2SubnetId: subnet-807240db # subnet id to be used for ec2 clusters
+    EmrManagedSlaveSecurityGroup: Security group for slave/core nodes  # Security group for the Core/Task nodes
+    EmrManagedMasterSecurityGroup: Security group for master node # Security group for the Master Node
+    JobFlowRole: Rolename # EC2 role to be used to create the cluster
+
+Tags:
+  - Key: Key Name 1
+    Value: Value of the key name 1
+
+  - Key: Key Name 1
+    Value: Value of the key name 1
